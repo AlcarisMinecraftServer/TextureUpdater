@@ -51,13 +51,26 @@ public class ResourcePackManager {
                     .timeout(Duration.ofSeconds(15))
                     .build();
 
-            String body = http.send(req, HttpResponse.BodyHandlers.ofString()).body();
+            HttpResponse<String> response = http.send(req, HttpResponse.BodyHandlers.ofString());
+            String body = response.body();
             JsonObject release = JsonParser.parseString(body).getAsJsonObject();
+
+            if (release.get("tag_name") == null) {
+                String apiMessage = release.has("message") ? release.get("message").getAsString() : "unknown error";
+                logger.error("[TextureUpdater] GitHub API returned unexpected response (HTTP {}): {}",
+                        response.statusCode(), apiMessage);
+                return false;
+            }
             String version = release.get("tag_name").getAsString();
 
             if (version.equals(currentVersion)) return false;
 
-            String downloadUrl = findAsset(release.getAsJsonArray("assets"));
+            JsonArray assets = release.getAsJsonArray("assets");
+            if (assets == null) {
+                logger.error("[TextureUpdater] GitHub release {} has no assets array", version);
+                return false;
+            }
+            String downloadUrl = findAsset(assets);
             if (downloadUrl == null) {
                 logger.error("[TextureUpdater] No matching asset found in GitHub release {}", version);
                 return false;
@@ -112,6 +125,7 @@ public class ResourcePackManager {
         String targetName = config.file;
         for (var element : assets) {
             JsonObject asset = element.getAsJsonObject();
+            if (asset.get("name") == null || asset.get("browser_download_url") == null) continue;
             String name = asset.get("name").getAsString();
             if (!targetName.isEmpty() ? name.equals(targetName) : name.endsWith(".zip")) {
                 return asset.get("browser_download_url").getAsString();
