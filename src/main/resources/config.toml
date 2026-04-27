@@ -1,0 +1,4 @@
+url = "https://api.github.com/repos/AlcarisMinecraftServer/ResourcePack/releases/latest"
+file = "Alcaris-ResourcePack.zip"
+checkIntervalMinutes = 5
+mandatory = true

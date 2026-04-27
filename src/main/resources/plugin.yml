@@ -1,4 +1,0 @@
-name: TextureUpdater
-version: '${version}'
-main: moe.nmkmn.texture_updater.TextureUpdater
-api-version: '1.20'

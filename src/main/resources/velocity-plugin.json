@@ -1,0 +1,9 @@
+{
+  "id": "${plugin_id}",
+  "name": "${plugin_name}",
+  "version": "${version}",
+  "description": "${plugin_description}",
+  "url": "https://www.alcaris.net",
+  "authors": ["Alcaris Teams"],
+  "main": "net.alcaris.plugin.texture.TextureUpdater"
+}
