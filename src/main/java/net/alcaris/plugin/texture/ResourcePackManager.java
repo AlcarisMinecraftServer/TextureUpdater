@@ -80,7 +80,7 @@ public class ResourcePackManager {
             logger.info("[TextureUpdater] Downloading resource pack {} ...", version);
             byte[] hash = downloadAndHash(resolvedUrl);
 
-            ResourcePackInfo newPack = server.createResourcePackBuilder(resolvedUrl)
+            ResourcePackInfo newPack = server.createResourcePackBuilder(downloadUrl)
                     .setHash(hash)
                     .build();
 
